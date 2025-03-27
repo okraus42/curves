@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 17:31:18 by okraus            #+#    #+#              #
-#    Updated: 2025/03/27 17:25:52 by okraus           ###   ########.fr        #
+#    Updated: 2025/03/27 19:37:39 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -96,7 +96,7 @@ clean:
 # Clean up both object files and the executable
 fclean: clean
 	$(RM) $(NAME) $(GAME_NAME)
-#	$(RM) $(MLX_DIR) $(SDL_DIR)
+	$(RM) $(MLX_DIR)
 
 # Clean and rebuild the program
 re: fclean all
