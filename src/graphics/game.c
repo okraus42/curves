@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/28 17:42:22 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/28 19:16:27 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void draw_player(t_game* g, uint8_t p)
 	// g->player[p].old_front_pixel_y = g->player[p].front_pixel_y;
 	// g->player[p].front_pixel_x = (g->player[p].x + g->player[p].dx) / g->player[p].radius;
 	// g->player[p].front_pixel_y = (g->player[p].y + g->player[p].dy) / g->player[p].radius;
-	sensory_pixel_x = (g->player[p].x + 3 * g->player[p].dx) / g->player[p].radius;
-	sensory_pixel_y = (g->player[p].y + 3 * g->player[p].dy) / g->player[p].radius;
+	sensory_pixel_x = (g->player[p].x + 3 * g->player[p].dx) / MOVE_SPEED;
+	sensory_pixel_y = (g->player[p].y + 3 * g->player[p].dy) / MOVE_SPEED;
 	// printf("OLD FRONT_PIXEL %i %i\n", g->player[p].old_front_pixel_x, g->player[p].old_front_pixel_y);
 	// printf("SENSORY FRONT_PIXEL %i %i\n", sensory_pixel_x, sensory_pixel_y);
 	if (sensory_pixel_x < 0 || sensory_pixel_x >= WIN_WIDTH
@@ -55,8 +55,8 @@ void draw_player(t_game* g, uint8_t p)
     {
         for (dy = -CIRCLE_SIZE; dy <= CIRCLE_SIZE; dy++)
         {
-            int pixel_x = g->player[p].x / g->player[p].radius + dx;
-            int pixel_y = g->player[p].y / g->player[p].radius + dy;
+            int pixel_x = g->player[p].x / MOVE_SPEED + dx;
+            int pixel_y = g->player[p].y / MOVE_SPEED + dy;
 			// if (dx == 0 && dy == 0)
             	// printf("PIXEL %i %i\n", pixel_x, pixel_y);
             // Check if the pixel is inside the circle and within screen boundaries
@@ -248,9 +248,9 @@ int update_game(void* param)
 	t_text	text;
 	text.pos_x = 224;
 	text.pos_y = 32;
-	text.colour = CLR_DARK_MAROON;
-	text.background = CLR_DARK_TEAL;
-	text.s = "   ...CURVES...   ";
+	text.colour = CLR_DARK_TURQUOISE;
+	text.background = CLR_TRANSPARENT;
+	text.s = "| . ..CURVES.. . |";
 	g->frame++;
 	if ((g->frame % SLOW_DOWN))
 		return (0);
@@ -270,6 +270,8 @@ int update_game(void* param)
 		g->player[0].dy = (int)(g->player[0].radius * sin(g->player[0].theta));  // dy along the circle
 		g->player[0].x += g->player[0].dx;
 		g->player[0].y += g->player[0].dy;
+		printf("0 %li\n", g->player[0].dx);
+		printf("0 %li\n", g->player[0].x);
 	}
 
 	if (g->player[1].alive)
@@ -288,6 +290,8 @@ int update_game(void* param)
 		g->player[1].dy = (int)(g->player[1].radius * sin(g->player[1].theta));  // dy along the circle
 		g->player[1].x += g->player[1].dx;
 		g->player[1].y += g->player[1].dy;
+		printf("1 %li\n", g->player[1].dx);
+		printf("1 %li\n", g->player[1].x);
 	}
 	// printf("B: %f %li %li %li %li\n", g->player[0].theta, g->player[0].x, g->player[0].y, g->player[0].dx, g->player[0].dy);
 
@@ -385,26 +389,26 @@ int game(t_game* g)
 	g->player[0].radius = 32;
 
 	// Compute the angular change (delta_theta) corresponding to the MOVE_SPEED
-	g->player[0].d_theta = MOVE_SPEED / (float)g->player[0].radius; // Fixed distance on the circle corresponds to an angular step
+	g->player[0].d_theta = 1.0 / (float)g->player[0].radius; // Fixed distance on the circle corresponds to an angular step
 	
 
 	// Create an array to store mlx and win pointers to pass in key press handler....
-	g->player[0].x = (WIN_WIDTH / 3 - CIRCLE_SIZE / 2) * g->player[0].radius;
-	g->player[0].y = (WIN_HEIGHT / 2 - CIRCLE_SIZE / 2) * g->player[0].radius ;
+	g->player[0].x = (WIN_WIDTH / 3 * 2) * MOVE_SPEED;
+	g->player[0].y = (WIN_HEIGHT / 2) * MOVE_SPEED ;
 
 	g->player[1].theta = atan2(g->player[1].dy, g->player[1].dx);
 	g->player[1].theta = -2.42f;
 
 	//hardcoded radius for now
-	g->player[1].radius = 32;
+	g->player[1].radius = 48;
 
 	// Compute the angular change (delta_theta) corresponding to the MOVE_SPEED
-	g->player[1].d_theta = MOVE_SPEED / (float)g->player[1].radius; // Fixed distance on the circle corresponds to an angular step
+	g->player[1].d_theta = 1.0 / (float)g->player[1].radius; // Fixed distance on the circle corresponds to an angular step
 	
 
 	// Create an array to store mlx and win pointers to pass in key press handler....
-	g->player[1].x = (WIN_WIDTH / 3 * 2 - CIRCLE_SIZE / 2) * g->player[1].radius;
-	g->player[1].y = (WIN_HEIGHT /  2 - CIRCLE_SIZE / 2) * g->player[1].radius ;
+	g->player[1].x = (WIN_WIDTH / 3) * MOVE_SPEED;
+	g->player[1].y = (WIN_HEIGHT /  2) * MOVE_SPEED ;
 
 	g->image.img =
 		mlx_xpm_file_to_image(g->mlx, ASCII_PATH, &g->image.width, &g->image.height);

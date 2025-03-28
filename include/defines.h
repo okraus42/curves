@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:11:13 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/28 17:42:08 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/28 19:11:14 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@
 # define WIN_WIDTH	 1600
 # define WIN_HEIGHT	 900
 # define CIRCLE_SIZE 2
-# define MOVE_SPEED	 1
+# define MOVE_SPEED	 32.0
 # define SLOW_DOWN	 512
 
 # define CLR_BLACK      0xFF000000U
