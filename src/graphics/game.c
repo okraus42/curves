@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/27 19:33:41 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/28 17:42:22 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void draw_char(t_game* g, t_char c)
 		for (x = 0U; x < 64U; x++)
 		{
 			// mlx_pixel_put(g->mlx, g->win, i, j, color);
-			if (x + c.pos_x >= g->frame % WIN_WIDTH && x + c.pos_x < g->frame % WIN_WIDTH + 4)
+			if (x + c.pos_x >= g->frame / SLOW_DOWN % WIN_WIDTH && x + c.pos_x < g->frame / SLOW_DOWN % WIN_WIDTH + 4)
 			{
 				// printf("text1\n");
 				if (c.c < 128U && g->font[c.c].data[y * 64U + x] && c.colour)
@@ -251,7 +251,9 @@ int update_game(void* param)
 	text.colour = CLR_DARK_MAROON;
 	text.background = CLR_DARK_TEAL;
 	text.s = "   ...CURVES...   ";
-
+	g->frame++;
+	if ((g->frame % SLOW_DOWN))
+		return (0);
 	if (g->player[0].alive)
 	{
 		// Rotate based on the fixed distance MOVE_SPEED
@@ -308,7 +310,6 @@ int update_game(void* param)
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (!g->player[0].alive && !g->player[1].alive)
 		close_window(g);
-	g->frame++;
 	return (0);
 }
 
