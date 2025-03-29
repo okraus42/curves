@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:11:13 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/28 19:11:14 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/29 18:05:48 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,12 +359,21 @@ typedef struct s_text
 	//effect
 } t_text;
 
-typedef struct s_players
+typedef struct s_player
 {
 	int64_t	x;
 	int64_t	y;
 	int64_t	dx;
 	int64_t	dy;
+	char	name[32];
+	//enum coalition
+	uint32_t	colour;
+	uint16_t	key_left;
+	uint16_t	key_right;
+	uint16_t	score;
+	uint8_t		deaths;
+	uint8_t		wins;
+	bool		on;
 	// int32_t	front_pixel_x;
 	// int32_t	front_pixel_y;
 	// int32_t	old_front_pixel_x;
@@ -373,7 +382,7 @@ typedef struct s_players
 	float	theta;
 	float	d_theta;
 	bool	alive;
-} t_players;
+} t_player;
 
 // Structure to hold game data
 typedef struct s_game
@@ -384,7 +393,7 @@ typedef struct s_game
 	t_screen	screen;
 	// int32_t x;
 	// int32_t y;
-	t_players	player[MAX_PLAYERS];
+	t_player	player[MAX_PLAYERS];
 	uint8_t		players;
 	bool	keys[MAX_KEY_SIZE]; // Large enough to store all keycodes
 	t_map	map;
