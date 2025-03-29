@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/28 19:16:27 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/29 16:30:29 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,7 +353,12 @@ int	read_ascii(t_game *g)
 	return (0);
 }
 
+//init players 2-6
+// count victories
 
+// player colour and controls
+
+//end when first player gets to 10 points
 
 //crop iamge function
 
