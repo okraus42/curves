@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:11:13 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/30 13:41:06 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/30 17:33:56 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -440,6 +440,8 @@ typedef struct s_game
 	t_player	player[MAX_PLAYERS];
 	uint8_t		players;
 	uint8_t		alive;
+	uint8_t		deaths;
+	uint8_t		rounds;
 	uint8_t		mode;	//0 menu, 1 game
 	bool	keys[MAX_KEY_SIZE]; // Large enough to store all keycodes
 	t_map	map;

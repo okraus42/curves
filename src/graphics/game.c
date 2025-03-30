@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/30 14:44:57 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/30 17:45:58 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,7 +322,7 @@ void init_player_1(t_game *g)
 	g->player[0].on = true;
 	sprintf(g->player[0].name, "PLAYER 1");
 	g->player[0].key_left = KEY_Z;
-	g->player[0].key_right = KEY_C;
+	g->player[0].key_right = KEY_X;
 	g->player[0].colour = CLR_DARK_BLUE;
 	g->player[0].ansi = ANSI_COLOUR_BLUE_MEDIUM;
 	// printf("%s Player 1 Left: %-10s | Right: %-10s %s\n", g->player[0].ansi, "KEY_Z", "KEY_C", ANSI_RESET);
@@ -346,7 +346,7 @@ void init_player_2(t_game *g)
 	g->player[1].on = true;
 	sprintf(g->player[1].name, "PLAYER 2");
 	g->player[1].key_left = KEY_LEFT;
-	g->player[1].key_right = KEY_RIGHT;
+	g->player[1].key_right = KEY_DOWN;
 	g->player[1].colour = CLR_DARK_GREEN;
 	g->player[1].ansi = ANSI_COLOUR_GREEN_DARK;
 	// printf("%s Player 2 Left: %-10s | Right: %-10s %s\n", g->player[1].ansi, "KEY_LEFT", "KEY_RIGHT", ANSI_RESET);
@@ -368,7 +368,7 @@ void init_player_3(t_game *g)
 	g->player[2].on = true;
 	sprintf(g->player[2].name, "PLAYER 3");
 	g->player[2].key_left = KEY_TILDE;
-	g->player[2].key_right = KEY_2;
+	g->player[2].key_right = KEY_1;
 	g->player[2].colour = CLR_DARK_RED;
 	g->player[2].ansi = ANSI_COLOUR_RED_MEDIUM;
 	// printf("%s Player 3 Left: %-10s | Right: %-10s %s\n", g->player[2].ansi, "KEY_TILDE", "KEY_2", ANSI_RESET);
@@ -411,7 +411,7 @@ void init_player_5(t_game *g)
 	g->player[4].d_theta = 1.0 / (float)g->player[4].radius;
 	g->player[4].on = true;
 	sprintf(g->player[4].name, "PLAYER 5");
-	g->player[4].key_left = KEY_B;
+	g->player[4].key_left = KEY_N;
 	g->player[4].key_right = KEY_M;
 	g->player[4].colour = CLR_DARK_MAGENTA;
 	g->player[4].ansi = ANSI_COLOUR_MAGENTA_DARK;
@@ -454,6 +454,30 @@ void	init_players(t_game *g)
 	init_player_4(g);
 	init_player_5(g);
 	init_player_6(g);
+	g->alive = g->players;
+}
+
+void	init_game(t_game *g)
+{
+	init_players(g);
+	g->player[0].wins = 0;
+	g->player[1].wins = 0;
+	g->player[2].wins = 0;
+	g->player[3].wins = 0;
+	g->player[4].wins = 0;
+	g->player[5].wins = 0;
+	g->player[0].deaths = 0;
+	g->player[1].deaths = 0;
+	g->player[2].deaths = 0;
+	g->player[3].deaths = 0;
+	g->player[4].deaths = 0;
+	g->player[5].deaths = 0;
+	g->player[0].score = 0;
+	g->player[1].score = 0;
+	g->player[2].score = 0;
+	g->player[3].score = 0;
+	g->player[4].score = 0;
+	g->player[5].score = 0;
 }
 
 
@@ -479,13 +503,13 @@ int menu_loop(t_game* g)
 	players[0].pos_y = 64 + 8 + (64 + 8) * 2;
 	players[0].colour = CLR_DARK_BLUE;
 	players[0].background = CLR_TRANSPARENT;
-	players[0].s = "PLAYER 1 |     Z |     C";
+	players[0].s = "PLAYER 1 |     Z |     X";
 
 	players[1].pos_x = 32;
 	players[1].pos_y = 64 + 8 + (64 + 8) * 3;
 	players[1].colour = CLR_DARK_GREEN;
 	players[1].background = CLR_TRANSPARENT;
-	players[1].s = "PLAYER 2 |  LEFT | RIGHT";
+	players[1].s = "PLAYER 2 |  LEFT |  DOWN";
 
 	players[2].pos_x = 32;
 	players[2].pos_y = 64 + 8 + (64 + 8) * 4;
@@ -494,7 +518,7 @@ int menu_loop(t_game* g)
 	else
 		players[2].colour = CLR_DARK_GRAY;
 	players[2].background = CLR_TRANSPARENT;
-	players[2].s = "PLAYER 3 |     ~ |     2";
+	players[2].s = "PLAYER 3 |     ~ |     1";
 
 	players[3].pos_x = 32;
 	players[3].pos_y = 64 + 8 + (64 + 8) * 5;
@@ -512,7 +536,7 @@ int menu_loop(t_game* g)
 	else
 		players[4].colour = CLR_DARK_GRAY;
 	players[4].background = CLR_TRANSPARENT;
-	players[4].s = "PLAYER 5 |     B |     M";
+	players[4].s = "PLAYER 5 |     N |     M";
 
 	players[5].pos_x = 32;
 	players[5].pos_y = 64 + 8 + (64 + 8) * 7;
@@ -529,16 +553,16 @@ int menu_loop(t_game* g)
 	info[1].background = CLR_TRANSPARENT;
 	info[1].s = "ENTER (play)  ESC (quit)";
 	
-	if (g->keys[KEY_LEFT])
+	if (g->keys[KEY_UP])
 	{
-		g->keys[KEY_LEFT] = false;
+		g->keys[KEY_UP] = false;
 		if (g->players > 2)
 			g->players -= 1;
 		
 	}
-	else if (g->keys[KEY_RIGHT])
+	else if (g->keys[KEY_DOWN])
 	{
-		g->keys[KEY_RIGHT] = false;
+		g->keys[KEY_DOWN] = false;
 		if (g->players < 6)
 			g->players += 1;
 	}
@@ -561,7 +585,7 @@ int menu_loop(t_game* g)
 	{
 		g->alive = g->players;
 		// printf("players %i\n", g->players);
-		init_players(g);
+		init_game(g);
 		clear_screen(g);
 		g->mode = 1;
 	}
@@ -631,30 +655,67 @@ int game_loop(t_game* g)
 	copy_screen(g);
 	// mlx_put_image_to_window(g->mlx, g->win, g->image.img, 100, 100);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	if (g->alive == 1)
+	if (g->alive <= 1)
 	{
-		if (g->player[0].alive)
-			printf("%s%s Player 1 WON! %s\n", g->player[0].ansi, ANSI_REVERSE, ANSI_RESET);
-		else if (g->player[1].alive)
-			printf("%s%s Player 2 WON! %s\n", g->player[1].ansi, ANSI_REVERSE, ANSI_RESET);
-		else if (g->player[2].alive)
-			printf("%s%s Player 3 WON! %s\n", g->player[2].ansi, ANSI_REVERSE, ANSI_RESET);
-		else if (g->player[3].alive)
-			printf("%s%s Player 4 WON! %s\n", g->player[3].ansi, ANSI_REVERSE, ANSI_RESET);
-		else if (g->player[4].alive)
-			printf("%s%s Player 5 WON! %s\n", g->player[4].ansi, ANSI_REVERSE, ANSI_RESET);
-		else if (g->player[5].alive)
-			printf("%s%s Player 6 WON! %s\n", g->player[5].ansi, ANSI_REVERSE, ANSI_RESET);
-		else
-			printf("%s Nobody won %s\n", ANSI_BG_GRAY, ANSI_RESET);
-		if (g->player[0].deaths < 10)
+		if (g->alive == 1)
 		{
-			clear_screen(g);
-			g->mode = 0;
+		if (g->player[0].alive)
+		{
+			g->player[0].wins += 1;
+			printf("%s%s Player 1 WON! %s\n", g->player[0].ansi, ANSI_REVERSE, ANSI_RESET);
+		}
+		else if (g->player[1].alive)
+		{
+			g->player[1].wins += 1;
+			printf("%s%s Player 2 WON! %s\n", g->player[1].ansi, ANSI_REVERSE, ANSI_RESET);
+		}
+		else if (g->player[2].alive)
+		{
+			g->player[2].wins += 1;
+			printf("%s%s Player 3 WON! %s\n", g->player[2].ansi, ANSI_REVERSE, ANSI_RESET);
+		}
+		else if (g->player[3].alive)
+		{
+			g->player[3].wins += 1;
+			printf("%s%s Player 4 WON! %s\n", g->player[3].ansi, ANSI_REVERSE, ANSI_RESET);
+		}
+		else if (g->player[4].alive)
+		{
+			g->player[4].wins += 1;
+			printf("%s%s Player 5 WON! %s\n", g->player[4].ansi, ANSI_REVERSE, ANSI_RESET);
+		}
+		else if (g->player[5].alive)
+		{
+			g->player[5].wins += 1;
+			printf("%s%s Player 6 WON! %s\n", g->player[5].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else
+			printf("%s Nobody won %s\n", ANSI_BG_GRAY, ANSI_RESET);
+		g->player[0].alive = false;
+		g->player[1].alive = false;
+		g->player[2].alive = false;
+		g->player[3].alive = false;
+		g->player[4].alive = false;
+		g->player[5].alive = false;
+		g->alive = 0;
+		}
+		if (g->rounds < 9 && g->keys[KEY_SPACE])
 		{
-			close_window(g);
+			g->rounds += 1;
+			clear_screen(g);
+			init_players(g);
+			g->keys[KEY_SPACE] = false;
+		}
+		else if (g->rounds >= 9 && g->keys[KEY_SPACE])
+		{
+			int i = 0;
+			while (i < g->players)
+			{
+				printf("%s%s Player %i: | SCORE: %3i | WINS %2i | DEATHS: %2i %s\n", g->player[i].ansi, ANSI_REVERSE, i, g->player[i].score, g->player[i].wins, g->player[i].deaths, ANSI_RESET);
+				i++;
+			}
+			clear_screen(g);
+			g->mode = 0;
 		}
 	}
 	if (g->keys[KEY_ESC])
@@ -692,7 +753,10 @@ int main_loop(void* param)
 
 // loop games
 
-// score
+// score round
+// score game
+
+// next round space
 
 //team play
 
