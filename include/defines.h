@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:11:13 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/29 18:05:48 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/30 13:41:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 // Reset colour
 # define ANSI_RESET "\x1b[0m"
 
+#define ANSI_REVERSE "\x1b[7m"
+
 // 16 RGB colour definitions
 # define ANSI_COLOUR_BLACK	 "\x1b[38;2;0;0;0m"		  // Black
 # define ANSI_COLOUR_RED	 "\x1b[38;2;255;0;0m"	  // Red
@@ -51,6 +53,22 @@
 # define ANSI_COLOUR_GREEN_LIGHT  "\x1b[38;2;144;238;144m" // Light Green
 # define ANSI_COLOUR_GREEN_MEDIUM "\x1b[38;2;0;255;0m"	   // Medium Green
 # define ANSI_COLOUR_GREEN_DARK	  "\x1b[38;2;0;128;0m"	   // Dark Green
+
+#define ANSI_COLOUR_RED_LIGHT     "\x1b[38;2;255;100;100m" // Light Red
+#define ANSI_COLOUR_RED_MEDIUM    "\x1b[38;2;200;0;0m"     // Medium Red
+#define ANSI_COLOUR_RED_DARK      "\x1b[38;2;139;0;0m"     // Dark Red
+
+#define ANSI_COLOUR_YELLOW_LIGHT  "\x1b[38;2;255;255;100m" // Light Yellow
+#define ANSI_COLOUR_YELLOW_MEDIUM "\x1b[38;2;255;255;0m"   // Medium Yellow
+#define ANSI_COLOUR_YELLOW_DARK   "\x1b[38;2;200;200;0m"   // Dark Yellow
+
+#define ANSI_COLOUR_CYAN_LIGHT    "\x1b[38;2;100;255;255m" // Light Cyan
+#define ANSI_COLOUR_CYAN_MEDIUM   "\x1b[38;2;0;200;200m"   // Medium Cyan
+#define ANSI_COLOUR_CYAN_DARK     "\x1b[38;2;0;139;139m"   // Dark Cyan
+
+#define ANSI_COLOUR_MAGENTA_LIGHT "\x1b[38;2;255;100;255m" // Light Magenta
+#define ANSI_COLOUR_MAGENTA_MEDIUM "\x1b[38;2;200;0;200m"  // Medium Magenta
+#define ANSI_COLOUR_MAGENTA_DARK  "\x1b[38;2;139;0;139m"   // Dark Magenta
 
 // 16 RGB background color definitions
 # define ANSI_BG_BLACK	 "\x1b[48;2;0;0;0m"		  // Black background
@@ -74,6 +92,29 @@
 # define ANSI_BG_GREEN_MEDIUM "\x1b[48;2;0;255;0m" // Medium Green background
 # define ANSI_BG_GREEN_DARK	  "\x1b[48;2;0;128;0m" // Dark Green background
 
+#define ANSI_BG_BLUE_LIGHT    "\x1b[48;2;100;100;255m" // Light Blue background
+#define ANSI_BG_BLUE_MEDIUM   "\x1b[48;2;0;0;200m"    // Medium Blue background
+#define ANSI_BG_BLUE_DARK     "\x1b[48;2;0;0;139m"    // Dark Blue background
+
+#define ANSI_BG_GREEN_LIGHT   "\x1b[48;2;144;238;144m" // Light Green background
+#define ANSI_BG_GREEN_MEDIUM  "\x1b[48;2;0;255;0m"     // Medium Green background
+#define ANSI_BG_GREEN_DARK    "\x1b[48;2;0;128;0m"     // Dark Green background
+
+#define ANSI_BG_RED_LIGHT     "\x1b[48;2;255;100;100m" // Light Red background
+#define ANSI_BG_RED_MEDIUM    "\x1b[48;2;200;0;0m"     // Medium Red background
+#define ANSI_BG_RED_DARK      "\x1b[48;2;139;0;0m"     // Dark Red background
+
+#define ANSI_BG_YELLOW_LIGHT  "\x1b[48;2;255;255;100m" // Light Yellow background
+#define ANSI_BG_YELLOW_MEDIUM "\x1b[48;2;255;255;0m"   // Medium Yellow background
+#define ANSI_BG_YELLOW_DARK   "\x1b[48;2;200;200;0m"   // Dark Yellow background
+
+#define ANSI_BG_CYAN_LIGHT    "\x1b[48;2;100;255;255m" // Light Cyan background
+#define ANSI_BG_CYAN_MEDIUM   "\x1b[48;2;0;200;200m"   // Medium Cyan background
+#define ANSI_BG_CYAN_DARK     "\x1b[48;2;0;139;139m"   // Dark Cyan background
+
+#define ANSI_BG_MAGENTA_LIGHT "\x1b[48;2;255;100;255m" // Light Magenta background
+#define ANSI_BG_MAGENTA_MEDIUM "\x1b[48;2;200;0;200m"  // Medium Magenta background
+#define ANSI_BG_MAGENTA_DARK  "\x1b[48;2;139;0;139m"   // Dark Magenta background
 
 // Define key codes
 # ifdef __APPLE__
@@ -189,6 +230,8 @@
 #  define KEY_BACKSLASH2   60
 
 # endif
+
+# define MY_PI 3.14159265358979323846
 
 # define WIN_WIDTH	 1600
 # define WIN_HEIGHT	 900
@@ -366,6 +409,7 @@ typedef struct s_player
 	int64_t	dx;
 	int64_t	dy;
 	char	name[32];
+	char	*ansi;
 	//enum coalition
 	uint32_t	colour;
 	uint16_t	key_left;
@@ -395,6 +439,8 @@ typedef struct s_game
 	// int32_t y;
 	t_player	player[MAX_PLAYERS];
 	uint8_t		players;
+	uint8_t		alive;
+	uint8_t		mode;	//0 menu, 1 game
 	bool	keys[MAX_KEY_SIZE]; // Large enough to store all keycodes
 	t_map	map;
 	t_img	image;
