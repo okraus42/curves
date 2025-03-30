@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/30 14:41:16 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/30 14:43:18 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -437,7 +437,7 @@ void init_player_6(t_game *g)
 	g->player[5].key_right = KEY_NUM_MINUS;
 	g->player[5].colour = CLR_DARK_YELLOW;
 	g->player[5].ansi = ANSI_COLOUR_YELLOW_DARK;
-	printf("%s Player 6 Left: %-10s | Right: %-10s %s\n", g->player[5].ansi, "KEY_NUM_*", "KEY_NUM_MINUS", ANSI_RESET);
+	// printf("%s Player 6 Left: %-10s | Right: %-10s %s\n", g->player[5].ansi, "KEY_NUM_*", "KEY_NUM_MINUS", ANSI_RESET);
 	g->player[5].x = WIN_WIDTH / 2.0 + (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
 	g->player[5].x += (rand() % (WIN_WIDTH / 8)) - (WIN_WIDTH / 16);
 	g->player[5].y = WIN_HEIGHT / 2.0 - WIN_HEIGHT / 4.0; // Top right
