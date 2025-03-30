@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/30 14:43:18 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/30 14:44:57 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -697,10 +697,9 @@ int main_loop(void* param)
 //team play
 
 // Main game loop
-int game(t_game* g, int p)
+int game(t_game* g)
 {
 	g->players = 2;
-	(void)p;
 	g->mlx = mlx_init();
 	if (!g->mlx)
 	{
