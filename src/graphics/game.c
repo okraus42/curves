@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/30 17:45:58 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/31 17:52:02 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,25 @@
 # include "mlx.h"
 # include <stdlib.h>
 
-// Function to draw a blue square
+
+// draw score board
+
+// calculate scores (hitting yourself  -1, others hitting you +1) +1 for every death of others
+
+// show score total || 
+
+void	add_point(t_game* g, uint8_t p, uint32_t colour)
+{
+	uint8_t	i;
+
+	i = 0;
+	while (i < g->players)
+	{
+		if (colour == g->player[i].colour && i != p)
+			g->player[i].score += 1;
+		++i;
+	}
+}
 
 void draw_player(t_game* g, uint8_t p)
 {
@@ -40,6 +58,7 @@ void draw_player(t_game* g, uint8_t p)
 	{
 		g->player[p].alive = false;
 		g->player[p].deaths += 1;
+		g->player[p].score += g->players - g->alive;
 		g->alive -= 1;
 		printf("%s Player %i died.%s\n", g->player[p].ansi, p + 1, ANSI_RESET);
 	}
@@ -47,7 +66,9 @@ void draw_player(t_game* g, uint8_t p)
 	{
 		g->player[p].alive = false;
 		g->player[p].deaths += 1;
+		g->player[p].score += g->players - g->alive;
 		g->alive -= 1;
+		add_point(g, p, g->screen.data[sensory_pixel_y * WIN_WIDTH + sensory_pixel_x]);
 		printf("%s Player %i died.%s\n", g->player[p].ansi, p + 1, ANSI_RESET);
 		// printf("Player %lu died.\n", g->frame);
 		// printf("Player %x died.\n", g->screen.data[g->player[p].front_pixel_y * WIN_WIDTH + g->player[p].front_pixel_x]);
@@ -478,6 +499,7 @@ void	init_game(t_game *g)
 	g->player[3].score = 0;
 	g->player[4].score = 0;
 	g->player[5].score = 0;
+	g->rounds = 0;
 }
 
 
@@ -662,31 +684,37 @@ int game_loop(t_game* g)
 		if (g->player[0].alive)
 		{
 			g->player[0].wins += 1;
+			g->player[0].score += g->players - 1;
 			printf("%s%s Player 1 WON! %s\n", g->player[0].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[1].alive)
 		{
 			g->player[1].wins += 1;
+			g->player[1].score += g->players - 1;
 			printf("%s%s Player 2 WON! %s\n", g->player[1].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[2].alive)
 		{
 			g->player[2].wins += 1;
+			g->player[2].score += g->players - 1;
 			printf("%s%s Player 3 WON! %s\n", g->player[2].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[3].alive)
 		{
 			g->player[3].wins += 1;
+			g->player[3].score += g->players - 1;
 			printf("%s%s Player 4 WON! %s\n", g->player[3].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[4].alive)
 		{
 			g->player[4].wins += 1;
+			g->player[4].score += g->players - 1;
 			printf("%s%s Player 5 WON! %s\n", g->player[4].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[5].alive)
 		{
 			g->player[5].wins += 1;
+			g->player[5].score += g->players - 1;
 			printf("%s%s Player 6 WON! %s\n", g->player[5].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else
@@ -698,6 +726,12 @@ int game_loop(t_game* g)
 		g->player[4].alive = false;
 		g->player[5].alive = false;
 		g->alive = 0;
+			int i = 0;
+			while (i < g->players)
+			{
+				printf("%s%s Player %i: | SCORE: %3i | WINS %2i | DEATHS: %2i %s\n", g->player[i].ansi, ANSI_REVERSE, i, g->player[i].score, g->player[i].wins, g->player[i].deaths, ANSI_RESET);
+				i++;
+			}
 		}
 		if (g->rounds < 9 && g->keys[KEY_SPACE])
 		{
