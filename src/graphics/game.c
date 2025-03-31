@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/31 17:52:02 by okraus           ###   ########.fr       */
+/*   Updated: 2025/03/31 19:09:20 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -684,37 +684,37 @@ int game_loop(t_game* g)
 		if (g->player[0].alive)
 		{
 			g->player[0].wins += 1;
-			g->player[0].score += g->players - 1;
+			g->player[0].score += g->players;
 			printf("%s%s Player 1 WON! %s\n", g->player[0].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[1].alive)
 		{
 			g->player[1].wins += 1;
-			g->player[1].score += g->players - 1;
+			g->player[1].score += g->players;
 			printf("%s%s Player 2 WON! %s\n", g->player[1].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[2].alive)
 		{
 			g->player[2].wins += 1;
-			g->player[2].score += g->players - 1;
+			g->player[2].score += g->players;
 			printf("%s%s Player 3 WON! %s\n", g->player[2].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[3].alive)
 		{
 			g->player[3].wins += 1;
-			g->player[3].score += g->players - 1;
+			g->player[3].score += g->players;
 			printf("%s%s Player 4 WON! %s\n", g->player[3].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[4].alive)
 		{
 			g->player[4].wins += 1;
-			g->player[4].score += g->players - 1;
+			g->player[4].score += g->players;
 			printf("%s%s Player 5 WON! %s\n", g->player[4].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else if (g->player[5].alive)
 		{
 			g->player[5].wins += 1;
-			g->player[5].score += g->players - 1;
+			g->player[5].score += g->players;
 			printf("%s%s Player 6 WON! %s\n", g->player[5].ansi, ANSI_REVERSE, ANSI_RESET);
 		}
 		else
