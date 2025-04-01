@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 17:31:18 by okraus            #+#    #+#              #
-#    Updated: 2025/03/27 19:37:39 by okraus           ###   ########.fr        #
+#    Updated: 2025/04/01 18:48:20 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ INCLUDE_DIR := include
 # Source and object files
 SRCS        :=	main.c \
 				graphics/game.c \
+				graphics/digit.c \
 				utils/utils.c
 OBJS        := $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS        := $(OBJS:.o=.d)

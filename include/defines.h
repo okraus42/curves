@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:11:13 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/30 17:33:56 by okraus           ###   ########.fr       */
+/*   Updated: 2025/04/01 18:44:57 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -428,6 +428,10 @@ typedef struct s_player
 	bool	alive;
 } t_player;
 
+#define DIGIT_HEIGHT	64U
+#define DIGIT_WIDTH		32U
+#define DIGIT_THICKNESS 4U
+
 // Structure to hold game data
 typedef struct s_game
 {
@@ -447,6 +451,7 @@ typedef struct s_game
 	t_map	map;
 	t_img	image;
 	t_img	bg[16];
+	uint8_t			digit[10][DIGIT_HEIGHT][DIGIT_WIDTH];
 	t_tile_64x64	font[128];
 	t_tile_64x64	tiles_64x64[256];
 	t_tile_32x64	tiles_32x64[256];

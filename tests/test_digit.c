@@ -4,7 +4,7 @@
 #define DIGIT_WIDTH  32
 #define DIGIT_THICKNESS 4
 
-void printDigit(int digit[DIGIT_HEIGHT][DIGIT_WIDTH]) {
+static void printDigit(int digit[DIGIT_HEIGHT][DIGIT_WIDTH]) {
     for (int i = 0; i < DIGIT_HEIGHT; i++) {
         for (int j = 0; j < DIGIT_WIDTH; j++) {
             printf("%d", digit[i][j]);
@@ -14,6 +14,7 @@ void printDigit(int digit[DIGIT_HEIGHT][DIGIT_WIDTH]) {
     }
     printf("\n");
 }
+
 
 void drawHorizontalSegment(int digit[DIGIT_HEIGHT][DIGIT_WIDTH], int y) {
     for (int i = 0; i < DIGIT_THICKNESS; i++) {
