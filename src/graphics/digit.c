@@ -1,7 +1,7 @@
 #include "defines.h"
 
 
-
+//use t_char
 static void printDigit(t_game* g, uint32_t colour, uint8_t digit, uint32_t y, uint32_t x)
 {
 	for (uint32_t i = 0U; i < DIGIT_HEIGHT; i++)

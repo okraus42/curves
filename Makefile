@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 17:31:18 by okraus            #+#    #+#              #
-#    Updated: 2025/04/01 18:48:20 by okraus           ###   ########.fr        #
+#    Updated: 2025/04/02 19:20:12 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,7 +80,7 @@ $(MLX_LIB):
 # 	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) $^ $(SDL_FLAGS) -o $(GAME_NAME)
 
 # Rule to compile each source file into an object file
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(SRC_DIR)/%.h
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -MMD -MP -c $< -o $@
 
