@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 17:31:09 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/30 17:24:26 by okraus           ###   ########.fr       */
+/*   Updated: 2025/04/03 18:21:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 		if (!g)
 			return (1);
 		ok_bzero(g, sizeof(t_game));
+		generateDigits(g);
 		game(g);
 		free(g);
     }

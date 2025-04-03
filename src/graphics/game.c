@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/03/31 19:09:20 by okraus           ###   ########.fr       */
+/*   Updated: 2025/04/03 18:32:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -673,6 +673,9 @@ int game_loop(t_game* g)
 	// printf("hi\n");
 	// clear_screen(g);
 	draw_players(g);
+	for (uint8_t i = 0; i < g->players; i++)
+		printScore(g, i);
+
 	draw_text(g, text);
 	copy_screen(g);
 	// mlx_put_image_to_window(g->mlx, g->win, g->image.img, 100, 100);

@@ -2,48 +2,64 @@
 
 
 //use t_char
-static void printDigit(t_game* g, uint32_t colour, uint8_t digit, uint32_t y, uint32_t x)
+static void printDigit(t_game* g, t_char d)
 {
 	for (uint32_t i = 0U; i < DIGIT_HEIGHT; i++)
 	{
 		for (uint32_t j = 0U; j < DIGIT_WIDTH; j++)
 		{
-			if (g->digit[digit][i][j])
-				g->screen.data[(y + i) * WIN_WIDTH + x + j] = colour;
-			else
-			g->screen.data[(y + i) * WIN_WIDTH + x + j] = CLR_DARK_GRAY;
+			if (g->digit[d.c][i][j])
+				g->screen.data[(d.pos_y + i) * WIN_WIDTH + d.pos_x + j] = d.colour;
+			else if (d.background)
+				g->screen.data[(d.pos_y + i) * WIN_WIDTH + d.pos_x + j] = d.background;
 		}
 	}
 }
 
-void printScore(t_game *g, int player)
+void	printScore(t_game *g, int p)
 {
-	uint32_t	y;
-	uint32_t	x;
+	t_char		d;
+	t_char		e;
 
-	// print score
-
-	//print wins
-	//print deaths
+	d.colour = g->player[p].colour;
+	d.background = CLR_TRANSPARENT;
+	d.pos_x = 64;
+	d.pos_y = 128 * p + 128;
+	e = d;
+	e.colour = CLR_GRAY_1;
+	e.c = 8;
+	d.c = g->player[p].score / 100;
+	printDigit(g, e);
+	printDigit(g, d);
+	d.pos_x += 32;
+	e.pos_x += 32;
+	d.c = g->player[p].score / 10 % 10;
+	printDigit(g, e);
+	printDigit(g, d);
+	d.pos_x += 32;
+	e.pos_x += 32;
+	d.c = g->player[p].score % 10;
+	printDigit(g, e);
+	printDigit(g, d);
 }
 
-static void drawHorizontalSegment(int digit[DIGIT_HEIGHT][DIGIT_WIDTH], int y)
+static void drawHorizontalSegment(uint8_t digit[DIGIT_HEIGHT][DIGIT_WIDTH], uint8_t y)
 {
-	for (int i = 0; i < DIGIT_THICKNESS; i++)
+	for (uint8_t i = 0; i < DIGIT_THICKNESS; i++)
 	{
-		for (int j = 2; j < DIGIT_WIDTH - 2; j++)
+		for (uint8_t j = 2; j < DIGIT_WIDTH - 2; j++)
 		{
 			digit[y + i][j] = 1;
 		}
 	}
 }
 
-static void drawVerticalSegment(int digit[DIGIT_HEIGHT][DIGIT_WIDTH], int x,
-								int yStart, int yEnd)
+static void drawVerticalSegment(uint8_t digit[DIGIT_HEIGHT][DIGIT_WIDTH], uint8_t x,
+								uint8_t yStart, uint8_t yEnd)
 {
-	for (int i = 0; i < DIGIT_THICKNESS; i++)
+	for (uint8_t i = 0; i < DIGIT_THICKNESS; i++)
 	{
-		for (int j = yStart; j < yEnd; j++)
+		for (uint8_t j = yStart; j < yEnd; j++)
 		{
 			digit[j][x + i] = 1;
 		}
