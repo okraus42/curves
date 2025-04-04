@@ -6,30 +6,29 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/04/03 18:32:08 by okraus           ###   ########.fr       */
+/*   Updated: 2025/04/04 19:05:43 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "game.h"
 #include "defines.h"
-#include <stdio.h>	//for debug and sprintf
-#include <stdlib.h> //for free and rand()
-#include <X11/Xlib.h>  // Needed for X11 functions
-#include <math.h> // atan2(), cos(), sin(), sqrt()
+#include <X11/Xlib.h> // Needed for X11 functions
+#include <math.h>	  // atan2(), cos(), sin(), sqrt()
+#include <stdio.h>	  //for debug and sprintf
+#include <stdlib.h>	  //for free and rand()
 
-# include "mlx.h"
-# include <stdlib.h>
-
+#include "mlx.h"
+#include <stdlib.h>
 
 // draw score board
 
 // calculate scores (hitting yourself  -1, others hitting you +1) +1 for every death of others
 
-// show score total || 
+// show score total ||
 
-void	add_point(t_game* g, uint8_t p, uint32_t colour)
+void add_point(t_game* g, uint8_t p, uint32_t colour)
 {
-	uint8_t	i;
+	uint8_t i;
 
 	i = 0;
 	while (i < g->players)
@@ -49,18 +48,24 @@ void draw_player(t_game* g, uint8_t p)
 	// g->player[p].old_front_pixel_y = g->player[p].front_pixel_y;
 	// g->player[p].front_pixel_x = (g->player[p].x + g->player[p].dx) / g->player[p].radius;
 	// g->player[p].front_pixel_y = (g->player[p].y + g->player[p].dy) / g->player[p].radius;
-	sensory_pixel_x = (g->player[p].x + (((72 - g->player[p].radius) / 16) + 2) * g->player[p].dx) / MOVE_SPEED;
-	sensory_pixel_y = (g->player[p].y + (((72 - g->player[p].radius) / 16) + 2) * g->player[p].dy) / MOVE_SPEED;
+	sensory_pixel_x =
+		(g->player[p].x +
+		 (((72 - g->player[p].radius) / 16) + 2) * g->player[p].dx) /
+		MOVE_SPEED;
+	sensory_pixel_y =
+		(g->player[p].y +
+		 (((72 - g->player[p].radius) / 16) + 2) * g->player[p].dy) /
+		MOVE_SPEED;
 	// printf("OLD FRONT_PIXEL %i %i\n", g->player[p].old_front_pixel_x, g->player[p].old_front_pixel_y);
 	// printf("SENSORY FRONT_PIXEL %i %i\n", sensory_pixel_x, sensory_pixel_y);
-	if (sensory_pixel_x < 0 || sensory_pixel_x >= WIN_WIDTH
-		|| sensory_pixel_y < 0 | sensory_pixel_y >= WIN_HEIGHT)
+	if (sensory_pixel_x < 0 || sensory_pixel_x >= WIN_WIDTH ||
+		sensory_pixel_y < 0 | sensory_pixel_y >= WIN_HEIGHT)
 	{
 		g->player[p].alive = false;
 		g->player[p].deaths += 1;
 		g->player[p].score += g->players - g->alive;
 		g->alive -= 1;
-		printf("%s Player %i died.%s\n", g->player[p].ansi, p + 1, ANSI_RESET);
+		// printf("%s Player %i died.%s\n", g->player[p].ansi, p + 1, ANSI_RESET);
 	}
 	else if (g->screen.data[sensory_pixel_y * WIN_WIDTH + sensory_pixel_x])
 	{
@@ -68,8 +73,10 @@ void draw_player(t_game* g, uint8_t p)
 		g->player[p].deaths += 1;
 		g->player[p].score += g->players - g->alive;
 		g->alive -= 1;
-		add_point(g, p, g->screen.data[sensory_pixel_y * WIN_WIDTH + sensory_pixel_x]);
-		printf("%s Player %i died.%s\n", g->player[p].ansi, p + 1, ANSI_RESET);
+		add_point(
+			g, p,
+			g->screen.data[sensory_pixel_y * WIN_WIDTH + sensory_pixel_x]);
+		// printf("%s Player %i died.%s\n", g->player[p].ansi, p + 1, ANSI_RESET);
 		// printf("Player %lu died.\n", g->frame);
 		// printf("Player %x died.\n", g->screen.data[g->player[p].front_pixel_y * WIN_WIDTH + g->player[p].front_pixel_x]);
 	}
@@ -77,29 +84,29 @@ void draw_player(t_game* g, uint8_t p)
 	// {
 	// 	printf("Player %x lives.\n", g->screen.data[g->player[p].old_front_pixel_y * WIN_WIDTH + g->player[p].old_front_pixel_x]);
 	// }
-    for (dx = -CIRCLE_SIZE; dx <= CIRCLE_SIZE; dx++)
-    {
-        for (dy = -CIRCLE_SIZE; dy <= CIRCLE_SIZE; dy++)
-        {
-            int pixel_x = g->player[p].x / MOVE_SPEED + dx;
-            int pixel_y = g->player[p].y / MOVE_SPEED + dy;
+	for (dx = -CIRCLE_SIZE; dx <= CIRCLE_SIZE; dx++)
+	{
+		for (dy = -CIRCLE_SIZE; dy <= CIRCLE_SIZE; dy++)
+		{
+			int pixel_x = g->player[p].x / MOVE_SPEED + dx;
+			int pixel_y = g->player[p].y / MOVE_SPEED + dy;
 			// if (dx == 0 && dy == 0)
-            	// printf("PIXEL %i %i\n", pixel_x, pixel_y);
-            // Check if the pixel is inside the circle and within screen boundaries
-            if (dx * dx + dy * dy <= CIRCLE_SIZE * CIRCLE_SIZE &&
-                pixel_x >= 0 && pixel_x < WIN_WIDTH &&
-                pixel_y >= 0 && pixel_y < WIN_HEIGHT)
-            {
-				g->screen.data[pixel_y * WIN_WIDTH + pixel_x] = g->player[p].colour;
-            }
-        }
-    }
+			// printf("PIXEL %i %i\n", pixel_x, pixel_y);
+			// Check if the pixel is inside the circle and within screen boundaries
+			if (dx * dx + dy * dy <= CIRCLE_SIZE * CIRCLE_SIZE &&
+				pixel_x >= 0 && pixel_x < WIN_WIDTH && pixel_y >= 0 &&
+				pixel_y < WIN_HEIGHT)
+			{
+				g->screen.data[pixel_y * WIN_WIDTH + pixel_x] =
+					g->player[p].colour;
+			}
+		}
+	}
 }
-
 
 void draw_players(t_game* g)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (i < g->players)
@@ -107,7 +114,7 @@ void draw_players(t_game* g)
 		if (g->player[i].alive)
 			draw_player(g, i);
 		++i;
-	}	
+	}
 }
 
 void draw_char(t_game* g, t_char c)
@@ -120,16 +127,20 @@ void draw_char(t_game* g, t_char c)
 		for (x = 0U; x < 64U; x++)
 		{
 			// mlx_pixel_put(g->mlx, g->win, i, j, color);
-			if (x + c.pos_x >= g->frame / SLOW_DOWN % WIN_WIDTH && x + c.pos_x < g->frame / SLOW_DOWN % WIN_WIDTH + 4)
+			if (x + c.pos_x >= g->frame / SLOW_DOWN % WIN_WIDTH &&
+				x + c.pos_x < g->frame / SLOW_DOWN % WIN_WIDTH + 4)
 			{
 				// printf("text1\n");
 				if (c.c < 128U && g->font[c.c].data[y * 64U + x] && c.colour)
 				{
 					// printf("text1\n");
-					g->screen.data[(y + c.pos_y) * WIN_WIDTH + (x + c.pos_x)] = CLR_GOLD;
+					g->screen.data[(y + c.pos_y) * WIN_WIDTH + (x + c.pos_x)] =
+						CLR_GOLD;
 				}
-				else if (c.c < 128U && c.c >= 32U && !g->font[c.c].data[y * 64U + x] && c.background)
-					g->screen.data[(y + c.pos_y) * WIN_WIDTH + (x + c.pos_x)] = CLR_SILVER;
+				else if (c.c < 128U && c.c >= 32U &&
+						 !g->font[c.c].data[y * 64U + x] && c.background)
+					g->screen.data[(y + c.pos_y) * WIN_WIDTH + (x + c.pos_x)] =
+						CLR_SILVER;
 				else
 				{
 					//empty for now
@@ -139,9 +150,12 @@ void draw_char(t_game* g, t_char c)
 			{
 				// printf("text2\n");
 				if (c.c < 128U && g->font[c.c].data[y * 64U + x] && c.colour)
-					g->screen.data[(y + c.pos_y) * WIN_WIDTH + (x + c.pos_x)] = c.colour;
-				else if (c.c < 128U && c.c >= 32U && !g->font[c.c].data[y * 64U + x] && c.background)
-					g->screen.data[(y + c.pos_y) * WIN_WIDTH + (x + c.pos_x)] = c.background;
+					g->screen.data[(y + c.pos_y) * WIN_WIDTH + (x + c.pos_x)] =
+						c.colour;
+				else if (c.c < 128U && c.c >= 32U &&
+						 !g->font[c.c].data[y * 64U + x] && c.background)
+					g->screen.data[(y + c.pos_y) * WIN_WIDTH + (x + c.pos_x)] =
+						c.background;
 				else
 				{
 					//empty for now
@@ -153,7 +167,7 @@ void draw_char(t_game* g, t_char c)
 
 void draw_text(t_game* g, t_text text)
 {
-	t_char	c;
+	t_char c;
 	c.pos_x = text.pos_x;
 	c.pos_y = text.pos_y;
 	c.colour = text.colour;
@@ -171,13 +185,13 @@ void draw_text(t_game* g, t_text text)
 void copy_screen(t_game* g)
 {
 	//possibly optimise with uint64_t
-	uint32_t	x;
-	uint32_t	y;
-	uint32_t	*data;
-	int bpp, size_line, endian;
+	uint32_t  x;
+	uint32_t  y;
+	uint32_t* data;
+	int		  bpp, size_line, endian;
 
 	y = 0;
-	data = (uint32_t *)mlx_get_data_addr(g->img, &bpp, &size_line, &endian);
+	data = (uint32_t*)mlx_get_data_addr(g->img, &bpp, &size_line, &endian);
 	(void)bpp;
 	(void)size_line;
 	(void)endian;
@@ -197,8 +211,8 @@ void copy_screen(t_game* g)
 void clear_screen(t_game* g)
 {
 	//possibly optimise with uint64_t
-	uint32_t	x;
-	uint32_t	y;
+	uint32_t x;
+	uint32_t y;
 
 	y = 0;
 	while (y < WIN_HEIGHT)
@@ -229,9 +243,6 @@ int key_press(int keycode, void* param)
 {
 	t_game* g = (t_game*)param;
 
-	
-
-
 	// if (keycode == KEY_ESC)
 	// {
 	// 	close_window(g); // Close the window
@@ -259,27 +270,26 @@ int key_release(int keycode, void* param)
 	return (0);
 }
 
-# define ASCII_PATH "assets/img/ascii.xpm"
-
+#define ASCII_PATH "assets/img/ascii.xpm"
 
 //copy image
 
-
 //read ascii
-int	read_ascii(t_game *g)
+int read_ascii(t_game* g)
 {
-	uint32_t	y;
-	uint32_t	x;
-	uint32_t	c;
-	uint32_t	*data;
+	uint32_t  y;
+	uint32_t  x;
+	uint32_t  c;
+	uint32_t* data;
 
-	data = (uint32_t *)mlx_get_data_addr(g->image.img, &g->image.bpp, &g->image.size_line, &g->image.endian);
+	data = (uint32_t*)mlx_get_data_addr(g->image.img, &g->image.bpp,
+										&g->image.size_line, &g->image.endian);
 	if (g->image.width != 640 || g->image.height != 640)
 	{
 		put_error("Failed to parse ascii.\n");
 		return (1);
 	}
-	put_str("Reading ascii.\n");
+	// put_str("Reading ascii.\n");
 	y = 0;
 	while (y < 640U)
 	{
@@ -287,14 +297,14 @@ int	read_ascii(t_game *g)
 		while (x < 640U)
 		{
 			c = 10U * (y / 64U) + (x / 64U) + 32U;
-			
+
 			if (c > ' ' && c <= '~' && data[y * 640U + x] != 0U)
 				g->font[c].data[y % 64 * 64 + x % 64] = 0xFFFFFFFFU;
 			x++;
 		}
 		y++;
 	}
-	put_str("Read ascii.\n");
+	// put_str("Read ascii.\n");
 	return (0);
 }
 
@@ -332,7 +342,7 @@ int	read_ascii(t_game *g)
 // 	bool	alive;
 // } t_player;
 
-void init_player_1(t_game *g)
+void init_player_1(t_game* g)
 {
 	g->player[0].alive = true;
 	g->player[0].theta = (rand() % 1024) / 128.0 - 512.0;
@@ -348,15 +358,15 @@ void init_player_1(t_game *g)
 	g->player[0].ansi = ANSI_COLOUR_BLUE_MEDIUM;
 	// printf("%s Player 1 Left: %-10s | Right: %-10s %s\n", g->player[0].ansi, "KEY_Z", "KEY_C", ANSI_RESET);
 	//position on hexagon
-    g->player[0].x = WIN_WIDTH / 2.0 - (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0);
+	g->player[0].x = WIN_WIDTH / 2.0 - (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0);
 	g->player[0].x += (rand() % (WIN_WIDTH / 8)) - (WIN_WIDTH / 16);
-	g->player[0].y = WIN_HEIGHT / 2.0;           // Mid left
+	g->player[0].y = WIN_HEIGHT / 2.0; // Mid left
 	g->player[0].y += (rand() % (WIN_HEIGHT / 8)) - (WIN_HEIGHT / 16);
 	g->player[0].x *= MOVE_SPEED;
 	g->player[0].y *= MOVE_SPEED;
 }
 
-void init_player_2(t_game *g)
+void init_player_2(t_game* g)
 {
 	g->player[1].alive = true;
 	g->player[1].theta = (rand() % 1024) / 128.0 - 512.0;
@@ -373,13 +383,13 @@ void init_player_2(t_game *g)
 	// printf("%s Player 2 Left: %-10s | Right: %-10s %s\n", g->player[1].ansi, "KEY_LEFT", "KEY_RIGHT", ANSI_RESET);
 	g->player[1].x = WIN_WIDTH / 2.0 + (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0);
 	g->player[1].x += (rand() % (WIN_WIDTH / 8)) - (WIN_WIDTH / 16);
-	g->player[1].y = WIN_HEIGHT / 2.0;           // Mid right
+	g->player[1].y = WIN_HEIGHT / 2.0; // Mid right
 	g->player[1].y += (rand() % (WIN_HEIGHT / 8)) - (WIN_HEIGHT / 16);
 	g->player[1].x *= MOVE_SPEED;
 	g->player[1].y *= MOVE_SPEED;
 }
 
-void init_player_3(t_game *g)
+void init_player_3(t_game* g)
 {
 	g->player[2].alive = true;
 	g->player[2].theta = (rand() % 1024) / 128.0 - 512.0;
@@ -393,7 +403,8 @@ void init_player_3(t_game *g)
 	g->player[2].colour = CLR_DARK_RED;
 	g->player[2].ansi = ANSI_COLOUR_RED_MEDIUM;
 	// printf("%s Player 3 Left: %-10s | Right: %-10s %s\n", g->player[2].ansi, "KEY_TILDE", "KEY_2", ANSI_RESET);
-	g->player[2].x = WIN_WIDTH / 2.0 - (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
+	g->player[2].x =
+		WIN_WIDTH / 2.0 - (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
 	g->player[2].x += (rand() % (WIN_WIDTH / 8)) - (WIN_WIDTH / 16);
 	g->player[2].y = WIN_HEIGHT / 2.0 - WIN_HEIGHT / 4.0; // Top left
 	g->player[2].y += (rand() % (WIN_HEIGHT / 8)) - (WIN_HEIGHT / 16);
@@ -401,7 +412,7 @@ void init_player_3(t_game *g)
 	g->player[2].y *= MOVE_SPEED;
 }
 
-void init_player_4(t_game *g)
+void init_player_4(t_game* g)
 {
 	g->player[3].alive = true;
 	g->player[3].theta = (rand() % 1024) / 128.0 - 512.0;
@@ -415,7 +426,8 @@ void init_player_4(t_game *g)
 	g->player[3].colour = CLR_DARK_CYAN;
 	g->player[3].ansi = ANSI_COLOUR_CYAN_DARK;
 	// printf("%s Player 4 Left: %-10s | Right: %-10s %s\n", g->player[3].ansi, "KEY_NUM_0", "KEY_NUM_DOT", ANSI_RESET);
-	g->player[3].x = WIN_WIDTH / 2.0 + (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
+	g->player[3].x =
+		WIN_WIDTH / 2.0 + (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
 	g->player[3].x += (rand() % (WIN_WIDTH / 8)) - (WIN_WIDTH / 16);
 	g->player[3].y = WIN_HEIGHT / 2.0 + WIN_HEIGHT / 4.0; // Bottom right
 	g->player[3].y += (rand() % (WIN_HEIGHT / 8)) - (WIN_HEIGHT / 16);
@@ -423,7 +435,7 @@ void init_player_4(t_game *g)
 	g->player[3].y *= MOVE_SPEED;
 }
 
-void init_player_5(t_game *g)
+void init_player_5(t_game* g)
 {
 	g->player[4].alive = true;
 	g->player[4].theta = (rand() % 1024) / 128.0 - 512.0;
@@ -437,7 +449,8 @@ void init_player_5(t_game *g)
 	g->player[4].colour = CLR_DARK_MAGENTA;
 	g->player[4].ansi = ANSI_COLOUR_MAGENTA_DARK;
 	// printf("%s Player 5 Left: %-10s | Right: %-10s %s\n", g->player[4].ansi, "KEY_B", "KEY_M", ANSI_RESET);
-	g->player[4].x = WIN_WIDTH / 2.0 - (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
+	g->player[4].x =
+		WIN_WIDTH / 2.0 - (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
 	g->player[4].x += (rand() % (WIN_WIDTH / 8)) - (WIN_WIDTH / 16);
 	g->player[4].y = WIN_HEIGHT / 2.0 + WIN_HEIGHT / 4.0; // Bottom left
 	g->player[4].y += (rand() % (WIN_HEIGHT / 8)) - (WIN_HEIGHT / 16);
@@ -445,7 +458,7 @@ void init_player_5(t_game *g)
 	g->player[4].y *= MOVE_SPEED;
 }
 
-void init_player_6(t_game *g)
+void init_player_6(t_game* g)
 {
 	g->player[5].alive = true;
 	g->player[5].theta = (rand() % 1024) / 128.0 - 512.0;
@@ -459,7 +472,8 @@ void init_player_6(t_game *g)
 	g->player[5].colour = CLR_DARK_YELLOW;
 	g->player[5].ansi = ANSI_COLOUR_YELLOW_DARK;
 	// printf("%s Player 6 Left: %-10s | Right: %-10s %s\n", g->player[5].ansi, "KEY_NUM_*", "KEY_NUM_MINUS", ANSI_RESET);
-	g->player[5].x = WIN_WIDTH / 2.0 + (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
+	g->player[5].x =
+		WIN_WIDTH / 2.0 + (WIN_HEIGHT / 4.0) / cos(MY_PI / 6.0) / 2.0;
 	g->player[5].x += (rand() % (WIN_WIDTH / 8)) - (WIN_WIDTH / 16);
 	g->player[5].y = WIN_HEIGHT / 2.0 - WIN_HEIGHT / 4.0; // Top right
 	g->player[5].y += (rand() % (WIN_HEIGHT / 8)) - (WIN_HEIGHT / 16);
@@ -467,7 +481,7 @@ void init_player_6(t_game *g)
 	g->player[5].y *= MOVE_SPEED;
 }
 
-void	init_players(t_game *g)
+void init_players(t_game* g)
 {
 	init_player_1(g);
 	init_player_2(g);
@@ -478,7 +492,7 @@ void	init_players(t_game *g)
 	g->alive = g->players;
 }
 
-void	init_game(t_game *g)
+void init_game(t_game* g)
 {
 	init_players(g);
 	g->player[0].wins = 0;
@@ -502,13 +516,12 @@ void	init_game(t_game *g)
 	g->rounds = 0;
 }
 
-
 // Update function for continuous movement
 int menu_loop(t_game* g)
 {
-	t_text	text;
-	t_text	info[2];
-	t_text	players[6];
+	t_text text;
+	t_text info[2];
+	t_text players[6];
 	text.pos_x = 224;
 	text.pos_y = 32;
 	text.colour = CLR_DARK_TURQUOISE;
@@ -574,13 +587,12 @@ int menu_loop(t_game* g)
 	info[1].colour = CLR_DARK_TURQUOISE;
 	info[1].background = CLR_TRANSPARENT;
 	info[1].s = "ENTER (play)  ESC (quit)";
-	
+
 	if (g->keys[KEY_UP])
 	{
 		g->keys[KEY_UP] = false;
 		if (g->players > 2)
 			g->players -= 1;
-		
 	}
 	else if (g->keys[KEY_DOWN])
 	{
@@ -615,15 +627,26 @@ int menu_loop(t_game* g)
 	{
 		close_window(g);
 	}
-	
+
 	return (0);
+}
+
+bool	check_score(t_game *g)
+{
+	bool	retVal = false;
+	for (uint8_t i = 0U; i < g->players; i++)
+	{
+		if (g->player[i].score >= WINNING_SCORE)
+			retVal = true;
+	}
+	return retVal;
 }
 
 // Update function for continuous movement
 int game_loop(t_game* g)
 {
-	t_text	text;
-	int	p = 0;
+	t_text text;
+	int	   p = 0;
 	text.pos_x = 224;
 	text.pos_y = 32;
 	text.colour = CLR_DARK_TURQUOISE;
@@ -639,15 +662,23 @@ int game_loop(t_game* g)
 			// Rotate based on the fixed distance MOVE_SPEED
 			if (g->keys[g->player[p].key_left])
 			{
-				g->player[p].theta -= g->player[p].d_theta;  // Move right along the circle by the fixed arc length
+				g->player[p].theta -=
+					g->player[p]
+						.d_theta; // Move right along the circle by the fixed arc length
 			}
 			if (g->keys[g->player[p].key_right])
 			{
-				g->player[p].theta += g->player[p].d_theta;  // Move right along the circle by the fixed arc length
+				g->player[p].theta +=
+					g->player[p]
+						.d_theta; // Move right along the circle by the fixed arc length
 			}
 			// Compute new dx, dy based on the updated theta while maintaining MOVE_SPEED
-			g->player[p].dx = (int)(g->player[p].radius * cos(g->player[p].theta));  // dx along the circle
-			g->player[p].dy = (int)(g->player[p].radius * sin(g->player[p].theta));  // dy along the circle
+			g->player[p].dx =
+				(int)(g->player[p].radius *
+					  cos(g->player[p].theta)); // dx along the circle
+			g->player[p].dy =
+				(int)(g->player[p].radius *
+					  sin(g->player[p].theta)); // dy along the circle
 			g->player[p].x += g->player[p].dx;
 			g->player[p].y += g->player[p].dy;
 			// printf("%i f %f %f %f\n", p, g->player[1].radius, cos(g->player[1].theta), g->player[1].radius * cos(g->player[1].theta));
@@ -684,71 +715,83 @@ int game_loop(t_game* g)
 	{
 		if (g->alive == 1)
 		{
-		if (g->player[0].alive)
-		{
-			g->player[0].wins += 1;
-			g->player[0].score += g->players;
-			printf("%s%s Player 1 WON! %s\n", g->player[0].ansi, ANSI_REVERSE, ANSI_RESET);
-		}
-		else if (g->player[1].alive)
-		{
-			g->player[1].wins += 1;
-			g->player[1].score += g->players;
-			printf("%s%s Player 2 WON! %s\n", g->player[1].ansi, ANSI_REVERSE, ANSI_RESET);
-		}
-		else if (g->player[2].alive)
-		{
-			g->player[2].wins += 1;
-			g->player[2].score += g->players;
-			printf("%s%s Player 3 WON! %s\n", g->player[2].ansi, ANSI_REVERSE, ANSI_RESET);
-		}
-		else if (g->player[3].alive)
-		{
-			g->player[3].wins += 1;
-			g->player[3].score += g->players;
-			printf("%s%s Player 4 WON! %s\n", g->player[3].ansi, ANSI_REVERSE, ANSI_RESET);
-		}
-		else if (g->player[4].alive)
-		{
-			g->player[4].wins += 1;
-			g->player[4].score += g->players;
-			printf("%s%s Player 5 WON! %s\n", g->player[4].ansi, ANSI_REVERSE, ANSI_RESET);
-		}
-		else if (g->player[5].alive)
-		{
-			g->player[5].wins += 1;
-			g->player[5].score += g->players;
-			printf("%s%s Player 6 WON! %s\n", g->player[5].ansi, ANSI_REVERSE, ANSI_RESET);
-		}
-		else
-			printf("%s Nobody won %s\n", ANSI_BG_GRAY, ANSI_RESET);
-		g->player[0].alive = false;
-		g->player[1].alive = false;
-		g->player[2].alive = false;
-		g->player[3].alive = false;
-		g->player[4].alive = false;
-		g->player[5].alive = false;
-		g->alive = 0;
-			int i = 0;
-			while (i < g->players)
+			if (g->player[0].alive)
 			{
-				printf("%s%s Player %i: | SCORE: %3i | WINS %2i | DEATHS: %2i %s\n", g->player[i].ansi, ANSI_REVERSE, i, g->player[i].score, g->player[i].wins, g->player[i].deaths, ANSI_RESET);
-				i++;
+				g->player[0].wins += 1;
+				g->player[0].score += g->players;
+				// printf("%s%s Player 1 WON! %s\n", g->player[0].ansi,
+				// 	   ANSI_REVERSE, ANSI_RESET);
 			}
+			else if (g->player[1].alive)
+			{
+				g->player[1].wins += 1;
+				g->player[1].score += g->players;
+				// printf("%s%s Player 2 WON! %s\n", g->player[1].ansi,
+				// 	   ANSI_REVERSE, ANSI_RESET);
+			}
+			else if (g->player[2].alive)
+			{
+				g->player[2].wins += 1;
+				g->player[2].score += g->players;
+				// printf("%s%s Player 3 WON! %s\n", g->player[2].ansi,
+				// 	   ANSI_REVERSE, ANSI_RESET);
+			}
+			else if (g->player[3].alive)
+			{
+				g->player[3].wins += 1;
+				g->player[3].score += g->players;
+				// printf("%s%s Player 4 WON! %s\n", g->player[3].ansi,
+				// 	   ANSI_REVERSE, ANSI_RESET);
+			}
+			else if (g->player[4].alive)
+			{
+				g->player[4].wins += 1;
+				g->player[4].score += g->players;
+				// printf("%s%s Player 5 WON! %s\n", g->player[4].ansi,
+				// 	   ANSI_REVERSE, ANSI_RESET);
+			}
+			else if (g->player[5].alive)
+			{
+				g->player[5].wins += 1;
+				g->player[5].score += g->players;
+				// printf("%s%s Player 6 WON! %s\n", g->player[5].ansi,
+				// 	   ANSI_REVERSE, ANSI_RESET);
+			}
+			else
+				printf("%s Nobody won %s\n", ANSI_BG_GRAY, ANSI_RESET);
+			g->player[0].alive = false;
+			g->player[1].alive = false;
+			g->player[2].alive = false;
+			g->player[3].alive = false;
+			g->player[4].alive = false;
+			g->player[5].alive = false;
+			g->alive = 0;
+			// int i = 0;
+			// while (i < g->players)
+			// {
+			// 	printf("%s%s Player %i: | SCORE: %3i | WINS %2i | DEATHS: %2i "
+			// 		   "%s\n",
+			// 		   g->player[i].ansi, ANSI_REVERSE, i, g->player[i].score,
+			// 		   g->player[i].wins, g->player[i].deaths, ANSI_RESET);
+			// 	i++;
+			// }
 		}
-		if (g->rounds < 9 && g->keys[KEY_SPACE])
+		if (!check_score(g) && g->keys[KEY_SPACE])
 		{
 			g->rounds += 1;
 			clear_screen(g);
 			init_players(g);
 			g->keys[KEY_SPACE] = false;
 		}
-		else if (g->rounds >= 9 && g->keys[KEY_SPACE])
+		else if (check_score(g) && g->keys[KEY_SPACE])
 		{
 			int i = 0;
 			while (i < g->players)
 			{
-				printf("%s%s Player %i: | SCORE: %3i | WINS %2i | DEATHS: %2i %s\n", g->player[i].ansi, ANSI_REVERSE, i, g->player[i].score, g->player[i].wins, g->player[i].deaths, ANSI_RESET);
+				printf("%s%s Player %i: | SCORE: %3i | WINS %2i | DEATHS: %2i "
+					   "%s\n",
+					   g->player[i].ansi, ANSI_REVERSE, i, g->player[i].score,
+					   g->player[i].wins, g->player[i].deaths, ANSI_RESET);
 				i++;
 			}
 			clear_screen(g);
@@ -770,7 +813,7 @@ int game_loop(t_game* g)
 int main_loop(void* param)
 {
 	t_game* g = (t_game*)param;
-	int	retVal;
+	int		retVal;
 
 	retVal = 0;
 	if (g->mode == 0)
@@ -815,8 +858,8 @@ int game(t_game* g)
 		return 1;
 	}
 
-	g->image.img =
-		mlx_xpm_file_to_image(g->mlx, ASCII_PATH, &g->image.width, &g->image.height);
+	g->image.img = mlx_xpm_file_to_image(g->mlx, ASCII_PATH, &g->image.width,
+										 &g->image.height);
 	if (!g->image.img)
 	{
 		put_error("Failed to load sprite sheet\n");
@@ -832,10 +875,10 @@ int game(t_game* g)
 	mlx_hook(g->win, 3, 1L << 1, key_release, g); // Handle key release
 	mlx_hook(g->win, 17, 0, close_window, g);	  // Handle window close event
 	// mlx_expose_hook(g->win, update_game, g);
-	mlx_loop_hook(g->mlx, main_loop, g);		  // Continuous movement check
+	mlx_loop_hook(g->mlx, main_loop, g); // Continuous movement check
 
 	// Enter the main event loop
-	mlx_loop(g->mlx);		  // This will run until mlx_loop_end() is called
+	mlx_loop(g->mlx); // This will run until mlx_loop_end() is called
 	if (g->mlx && g->image.img && g->img) // Ensure pointers are valid
 	{
 		mlx_destroy_image(g->mlx, g->image.img);

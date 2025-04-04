@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:11:13 by okraus            #+#    #+#             */
-/*   Updated: 2025/04/02 19:17:58 by okraus           ###   ########.fr       */
+/*   Updated: 2025/04/04 18:55:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # define MAX_MAP_SIDE  1024U
 # define MAX_KEY_SIZE  65536U
 # define MAX_FILE_SIZE 65536U
+# define WINNING_SCORE 42U
 
 # include <stdbool.h>
 # include <stddef.h>
@@ -30,7 +31,7 @@
 // Reset colour
 # define ANSI_RESET "\x1b[0m"
 
-#define ANSI_REVERSE "\x1b[7m"
+# define ANSI_REVERSE "\x1b[7m"
 
 // 16 RGB colour definitions
 # define ANSI_COLOUR_BLACK	 "\x1b[38;2;0;0;0m"		  // Black
@@ -54,21 +55,21 @@
 # define ANSI_COLOUR_GREEN_MEDIUM "\x1b[38;2;0;255;0m"	   // Medium Green
 # define ANSI_COLOUR_GREEN_DARK	  "\x1b[38;2;0;128;0m"	   // Dark Green
 
-#define ANSI_COLOUR_RED_LIGHT     "\x1b[38;2;255;100;100m" // Light Red
-#define ANSI_COLOUR_RED_MEDIUM    "\x1b[38;2;200;0;0m"     // Medium Red
-#define ANSI_COLOUR_RED_DARK      "\x1b[38;2;139;0;0m"     // Dark Red
+# define ANSI_COLOUR_RED_LIGHT	"\x1b[38;2;255;100;100m" // Light Red
+# define ANSI_COLOUR_RED_MEDIUM "\x1b[38;2;200;0;0m"	 // Medium Red
+# define ANSI_COLOUR_RED_DARK	"\x1b[38;2;139;0;0m"	 // Dark Red
 
-#define ANSI_COLOUR_YELLOW_LIGHT  "\x1b[38;2;255;255;100m" // Light Yellow
-#define ANSI_COLOUR_YELLOW_MEDIUM "\x1b[38;2;255;255;0m"   // Medium Yellow
-#define ANSI_COLOUR_YELLOW_DARK   "\x1b[38;2;200;200;0m"   // Dark Yellow
+# define ANSI_COLOUR_YELLOW_LIGHT  "\x1b[38;2;255;255;100m" // Light Yellow
+# define ANSI_COLOUR_YELLOW_MEDIUM "\x1b[38;2;255;255;0m"	// Medium Yellow
+# define ANSI_COLOUR_YELLOW_DARK   "\x1b[38;2;200;200;0m"	// Dark Yellow
 
-#define ANSI_COLOUR_CYAN_LIGHT    "\x1b[38;2;100;255;255m" // Light Cyan
-#define ANSI_COLOUR_CYAN_MEDIUM   "\x1b[38;2;0;200;200m"   // Medium Cyan
-#define ANSI_COLOUR_CYAN_DARK     "\x1b[38;2;0;139;139m"   // Dark Cyan
+# define ANSI_COLOUR_CYAN_LIGHT	 "\x1b[38;2;100;255;255m" // Light Cyan
+# define ANSI_COLOUR_CYAN_MEDIUM "\x1b[38;2;0;200;200m"	  // Medium Cyan
+# define ANSI_COLOUR_CYAN_DARK	 "\x1b[38;2;0;139;139m"	  // Dark Cyan
 
-#define ANSI_COLOUR_MAGENTA_LIGHT "\x1b[38;2;255;100;255m" // Light Magenta
-#define ANSI_COLOUR_MAGENTA_MEDIUM "\x1b[38;2;200;0;200m"  // Medium Magenta
-#define ANSI_COLOUR_MAGENTA_DARK  "\x1b[38;2;139;0;139m"   // Dark Magenta
+# define ANSI_COLOUR_MAGENTA_LIGHT	"\x1b[38;2;255;100;255m" // Light Magenta
+# define ANSI_COLOUR_MAGENTA_MEDIUM "\x1b[38;2;200;0;200m"	 // Medium Magenta
+# define ANSI_COLOUR_MAGENTA_DARK	"\x1b[38;2;139;0;139m"	 // Dark Magenta
 
 // 16 RGB background color definitions
 # define ANSI_BG_BLACK	 "\x1b[48;2;0;0;0m"		  // Black background
@@ -92,29 +93,33 @@
 # define ANSI_BG_GREEN_MEDIUM "\x1b[48;2;0;255;0m" // Medium Green background
 # define ANSI_BG_GREEN_DARK	  "\x1b[48;2;0;128;0m" // Dark Green background
 
-#define ANSI_BG_BLUE_LIGHT    "\x1b[48;2;100;100;255m" // Light Blue background
-#define ANSI_BG_BLUE_MEDIUM   "\x1b[48;2;0;0;200m"    // Medium Blue background
-#define ANSI_BG_BLUE_DARK     "\x1b[48;2;0;0;139m"    // Dark Blue background
+# define ANSI_BG_BLUE_LIGHT	 "\x1b[48;2;100;100;255m" // Light Blue background
+# define ANSI_BG_BLUE_MEDIUM "\x1b[48;2;0;0;200m"	  // Medium Blue background
+# define ANSI_BG_BLUE_DARK	 "\x1b[48;2;0;0;139m"	  // Dark Blue background
 
-#define ANSI_BG_GREEN_LIGHT   "\x1b[48;2;144;238;144m" // Light Green background
-#define ANSI_BG_GREEN_MEDIUM  "\x1b[48;2;0;255;0m"     // Medium Green background
-#define ANSI_BG_GREEN_DARK    "\x1b[48;2;0;128;0m"     // Dark Green background
+# define ANSI_BG_GREEN_LIGHT  "\x1b[48;2;144;238;144m" // Light Green background
+# define ANSI_BG_GREEN_MEDIUM "\x1b[48;2;0;255;0m" // Medium Green background
+# define ANSI_BG_GREEN_DARK	  "\x1b[48;2;0;128;0m" // Dark Green background
 
-#define ANSI_BG_RED_LIGHT     "\x1b[48;2;255;100;100m" // Light Red background
-#define ANSI_BG_RED_MEDIUM    "\x1b[48;2;200;0;0m"     // Medium Red background
-#define ANSI_BG_RED_DARK      "\x1b[48;2;139;0;0m"     // Dark Red background
+# define ANSI_BG_RED_LIGHT	"\x1b[48;2;255;100;100m" // Light Red background
+# define ANSI_BG_RED_MEDIUM "\x1b[48;2;200;0;0m"	 // Medium Red background
+# define ANSI_BG_RED_DARK	"\x1b[48;2;139;0;0m"	 // Dark Red background
 
-#define ANSI_BG_YELLOW_LIGHT  "\x1b[48;2;255;255;100m" // Light Yellow background
-#define ANSI_BG_YELLOW_MEDIUM "\x1b[48;2;255;255;0m"   // Medium Yellow background
-#define ANSI_BG_YELLOW_DARK   "\x1b[48;2;200;200;0m"   // Dark Yellow background
+# define ANSI_BG_YELLOW_LIGHT                                                  \
+		"\x1b[48;2;255;255;100m" // Light Yellow background
+# define ANSI_BG_YELLOW_MEDIUM                                                 \
+		"\x1b[48;2;255;255;0m"						// Medium Yellow background
+# define ANSI_BG_YELLOW_DARK "\x1b[48;2;200;200;0m" // Dark Yellow background
 
-#define ANSI_BG_CYAN_LIGHT    "\x1b[48;2;100;255;255m" // Light Cyan background
-#define ANSI_BG_CYAN_MEDIUM   "\x1b[48;2;0;200;200m"   // Medium Cyan background
-#define ANSI_BG_CYAN_DARK     "\x1b[48;2;0;139;139m"   // Dark Cyan background
+# define ANSI_BG_CYAN_LIGHT	 "\x1b[48;2;100;255;255m" // Light Cyan background
+# define ANSI_BG_CYAN_MEDIUM "\x1b[48;2;0;200;200m"	  // Medium Cyan background
+# define ANSI_BG_CYAN_DARK	 "\x1b[48;2;0;139;139m"	  // Dark Cyan background
 
-#define ANSI_BG_MAGENTA_LIGHT "\x1b[48;2;255;100;255m" // Light Magenta background
-#define ANSI_BG_MAGENTA_MEDIUM "\x1b[48;2;200;0;200m"  // Medium Magenta background
-#define ANSI_BG_MAGENTA_DARK  "\x1b[48;2;139;0;139m"   // Dark Magenta background
+# define ANSI_BG_MAGENTA_LIGHT                                                 \
+		"\x1b[48;2;255;100;255m" // Light Magenta background
+# define ANSI_BG_MAGENTA_MEDIUM                                                \
+		"\x1b[48;2;200;0;200m" // Medium Magenta background
+# define ANSI_BG_MAGENTA_DARK "\x1b[48;2;139;0;139m" // Dark Magenta background
 
 // Define key codes
 # ifdef __APPLE__
@@ -239,88 +244,88 @@
 # define MOVE_SPEED	 32.0
 # define SLOW_DOWN	 512
 
-# define CLR_BLACK      0xFF000000U
-# define CLR_WHITE      0xFFFFFFFFU
+# define CLR_BLACK 0xFF000000U
+# define CLR_WHITE 0xFFFFFFFFU
 
-# define CLR_RED        0xFFFF0000U
-# define CLR_LIGHT_RED  0xFFFF6666U
-# define CLR_DARK_RED   0xFF990000U
+# define CLR_RED	   0xFFFF0000U
+# define CLR_LIGHT_RED 0xFFFF6666U
+# define CLR_DARK_RED  0xFF990000U
 
-# define CLR_GREEN      0xFF00FF00U
+# define CLR_GREEN		 0xFF00FF00U
 # define CLR_LIGHT_GREEN 0xFF66FF66U
-# define CLR_DARK_GREEN  0xFF009900U
+# define CLR_DARK_GREEN	 0xFF009900U
 
-# define CLR_BLUE       0xFF0000FFU
+# define CLR_BLUE		0xFF0000FFU
 # define CLR_LIGHT_BLUE 0xFF6666FFU
-# define CLR_DARK_BLUE  0xFF000099U
+# define CLR_DARK_BLUE	0xFF000099U
 
-# define CLR_YELLOW      0xFFFFFF00U
+# define CLR_YELLOW		  0xFFFFFF00U
 # define CLR_LIGHT_YELLOW 0xFFFFFF66U
 # define CLR_DARK_YELLOW  0xFF999900U
 
-# define CLR_CYAN       0xFF00FFFFU
+# define CLR_CYAN		0xFF00FFFFU
 # define CLR_LIGHT_CYAN 0xFF66FFFFU
-# define CLR_DARK_CYAN  0xFF009999U
+# define CLR_DARK_CYAN	0xFF009999U
 
-# define CLR_MAGENTA       0xFFFF00FFU
+# define CLR_MAGENTA	   0xFFFF00FFU
 # define CLR_LIGHT_MAGENTA 0xFFFF66FFU
 # define CLR_DARK_MAGENTA  0xFF990099U
 
-# define CLR_ORANGE      0xFFFFA500U
+# define CLR_ORANGE		  0xFFFFA500U
 # define CLR_LIGHT_ORANGE 0xFFFFB347U
 # define CLR_DARK_ORANGE  0xFFCC8400U
 
-# define CLR_PURPLE      0xFF800080U
+# define CLR_PURPLE		  0xFF800080U
 # define CLR_LIGHT_PURPLE 0xFFDDA0DDU
 # define CLR_DARK_PURPLE  0xFF4B0082U
 
-# define CLR_BROWN      0xFF8B4513U
+# define CLR_BROWN		 0xFF8B4513U
 # define CLR_LIGHT_BROWN 0xFFCD853FU
-# define CLR_DARK_BROWN  0xFF5C2E0FU
+# define CLR_DARK_BROWN	 0xFF5C2E0FU
 
-# define CLR_PINK       0xFFFFC0CBU
+# define CLR_PINK		0xFFFFC0CBU
 # define CLR_LIGHT_PINK 0xFFFFB6C1U
-# define CLR_DARK_PINK  0xFFC71585U
+# define CLR_DARK_PINK	0xFFC71585U
 
-# define CLR_GRAY       0xFF808080U
+# define CLR_GRAY		0xFF808080U
 # define CLR_LIGHT_GRAY 0xFFD3D3D3U
-# define CLR_DARK_GRAY  0xFF505050U
+# define CLR_DARK_GRAY	0xFF505050U
 
-# define CLR_GRAY_1  0xFF222222U  // Very Dark Gray
-# define CLR_GRAY_2  0xFF444444U  // Dark Gray
-# define CLR_GRAY_3  0xFF666666U  // Medium-Dark Gray
-# define CLR_GRAY_4  0xFF888888U  // Mid GRay
-# define CLR_GRAY_5  0xFFAAAAAAU  // Medium-Light GRay
-# define CLR_GRAY_6  0xFFCCCCCCU  // Light GRay
-# define CLR_GRAY_7  0xFFEEEEEEU  // Very Light Gray
+# define CLR_GRAY_1 0xFF222222U // Very Dark Gray
+# define CLR_GRAY_2 0xFF444444U // Dark Gray
+# define CLR_GRAY_3 0xFF666666U // Medium-Dark Gray
+# define CLR_GRAY_4 0xFF888888U // Mid Gray
+# define CLR_GRAY_5 0xFFAAAAAAU // Medium-Light Gray
+# define CLR_GRAY_6 0xFFCCCCCCU // Light Gray
+# define CLR_GRAY_7 0xFFEEEEEEU // Very Light Gray
 
-# define CLR_GOLD       0xFFFFD700U
-# define CLR_SILVER     0xFFC0C0C0U
-# define CLR_BRONZE     0xFFCD7F32U
+# define CLR_GOLD	0xFFFFD700U
+# define CLR_SILVER 0xFFC0C0C0U
+# define CLR_BRONZE 0xFFCD7F32U
 
-# define CLR_TEAL       0xFF008080U
+# define CLR_TEAL		0xFF008080U
 # define CLR_LIGHT_TEAL 0xFF66CCCCU
-# define CLR_DARK_TEAL  0xFF004C4CU
+# define CLR_DARK_TEAL	0xFF004C4CU
 
-# define CLR_NAVY       0xFF000080U
+# define CLR_NAVY		0xFF000080U
 # define CLR_LIGHT_NAVY 0xFF3366CCU
-# define CLR_DARK_NAVY  0xFF00004CU
+# define CLR_DARK_NAVY	0xFF00004CU
 
-# define CLR_OLIVE      0xFF808000U
+# define CLR_OLIVE		 0xFF808000U
 # define CLR_LIGHT_OLIVE 0xFFB5B35FU
-# define CLR_DARK_OLIVE  0xFF5A5A00U
+# define CLR_DARK_OLIVE	 0xFF5A5A00U
 
-# define CLR_MAROON      0xFF800000U
+# define CLR_MAROON		  0xFF800000U
 # define CLR_LIGHT_MAROON 0xFFB03060U
 # define CLR_DARK_MAROON  0xFF400000U
 
-# define CLR_TURQUOISE      0xFF40E0D0U
+# define CLR_TURQUOISE		 0xFF40E0D0U
 # define CLR_LIGHT_TURQUOISE 0xFFAFEEEEU
-# define CLR_DARK_TURQUOISE  0xFF008080U
+# define CLR_DARK_TURQUOISE	 0xFF008080U
 
-# define CLR_TRANSPARENT  0x00000000U
+# define CLR_TRANSPARENT 0x00000000U
 
-# define MAX_PLAYERS  6
+# define MAX_PLAYERS 6
 
 enum e_tiles
 {
@@ -345,45 +350,44 @@ typedef struct s_map
 
 typedef struct s_tile_64x64
 {
-	uint32_t		data[4096];
+	uint32_t data[4096];
 } t_tile_64x64;
 
 // works as 64x32 too
 typedef struct s_tile_32x64
 {
-	uint32_t		data[2048];
+	uint32_t data[2048];
 } t_tile_32x64;
 
 // my screen
 typedef struct s_screen
 {
-	uint32_t		data[WIN_WIDTH * WIN_HEIGHT];
+	uint32_t data[WIN_WIDTH * WIN_HEIGHT];
 } t_screen;
 
 typedef struct s_img
 {
-	char		*path;
-	void		*img;
-	int32_t		width;
-	int32_t		height;
-	uint8_t		frames;
-	int32_t		bpp;
-	int32_t		size_line;
-	int32_t		endian;
-	uint8_t		current_frame;
+	char*	path;
+	void*	img;
+	int32_t width;
+	int32_t height;
+	uint8_t frames;
+	int32_t bpp;
+	int32_t size_line;
+	int32_t endian;
+	uint8_t current_frame;
 } t_img;
-
 
 //char
 typedef struct s_char
 {
-	uint8_t		c;
-	uint32_t	width;
-	uint32_t	height;
-	uint32_t	pos_x;
-	uint32_t	pos_y;
-	uint32_t	colour;
-	uint32_t	background;
+	uint8_t	 c;
+	uint32_t width;
+	uint32_t height;
+	uint32_t pos_x;
+	uint32_t pos_y;
+	uint32_t colour;
+	uint32_t background;
 	//font
 	//effect
 } t_char;
@@ -391,71 +395,71 @@ typedef struct s_char
 //textbox
 typedef struct s_text
 {
-	char		*s;
-	uint32_t	width;
-	uint32_t	height;
-	uint32_t	pos_x;
-	uint32_t	pos_y;
-	uint32_t	colour;
-	uint32_t	background;
+	char*	 s;
+	uint32_t width;
+	uint32_t height;
+	uint32_t pos_x;
+	uint32_t pos_y;
+	uint32_t colour;
+	uint32_t background;
 	//font
 	//effect
 } t_text;
 
 typedef struct s_player
 {
-	int64_t	x;
-	int64_t	y;
-	int64_t	dx;
-	int64_t	dy;
+	int64_t x;
+	int64_t y;
+	int64_t dx;
+	int64_t dy;
 	char	name[32];
-	char	*ansi;
+	char*	ansi;
 	//enum coalition
-	uint32_t	colour;
-	uint16_t	key_left;
-	uint16_t	key_right;
-	uint16_t	score;
-	uint8_t		deaths;
-	uint8_t		wins;
-	bool		on;
+	uint32_t colour;
+	uint16_t key_left;
+	uint16_t key_right;
+	uint16_t score;
+	uint8_t	 deaths;
+	uint8_t	 wins;
+	bool	 on;
 	// int32_t	front_pixel_x;
 	// int32_t	front_pixel_y;
 	// int32_t	old_front_pixel_x;
 	// int32_t	old_front_pixel_y;
-	float	radius;
-	float	theta;
-	float	d_theta;
-	bool	alive;
+	float radius;
+	float theta;
+	float d_theta;
+	bool  alive;
 } t_player;
 
-#define DIGIT_HEIGHT	64U
-#define DIGIT_WIDTH		32U
-#define DIGIT_THICKNESS 4U
+# define DIGIT_HEIGHT	 64U
+# define DIGIT_WIDTH	 32U
+# define DIGIT_THICKNESS 4U
 
 // Structure to hold game data
 typedef struct s_game
 {
-	void*	mlx;
-	void*	win;
-	void*	img; //possible can be more for buffered image
-	t_screen	screen;
-	// int32_t x;
-	// int32_t y;
-	t_player	player[MAX_PLAYERS];
-	uint8_t		players;
-	uint8_t		alive;
-	uint8_t		deaths;
-	uint8_t		rounds;
-	uint8_t		mode;	//0 menu, 1 game
-	bool	keys[MAX_KEY_SIZE]; // Large enough to store all keycodes
-	t_map	map;
-	t_img	image;
-	t_img	bg[16];
-	uint8_t			digit[10][DIGIT_HEIGHT][DIGIT_WIDTH];
-	t_tile_64x64	font[128];
-	t_tile_64x64	tiles_64x64[256];
-	t_tile_32x64	tiles_32x64[256];
-	uint64_t		frame;
+	void*		 mlx;
+	void*		 win;
+	void*		 img; //possible can be more for buffered image
+	t_screen	 screen;
+	int32_t		 win_width;
+	int32_t		 win_height;
+	t_player	 player[MAX_PLAYERS];
+	uint8_t		 players;
+	uint8_t		 alive;
+	uint8_t		 deaths;
+	uint8_t		 rounds;
+	uint8_t		 mode;				 //0 menu, 1 game
+	bool		 keys[MAX_KEY_SIZE]; // Large enough to store all keycodes
+	t_map		 map;
+	t_img		 image;
+	t_img		 bg[16];
+	uint8_t		 digit[10][DIGIT_HEIGHT][DIGIT_WIDTH];
+	t_tile_64x64 font[128];
+	t_tile_64x64 tiles_64x64[256];
+	t_tile_32x64 tiles_32x64[256];
+	uint64_t	 frame;
 } t_game;
 
 #endif
