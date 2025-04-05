@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 17:31:18 by okraus            #+#    #+#              #
-#    Updated: 2025/04/03 17:45:27 by okraus           ###   ########.fr        #
+#    Updated: 2025/04/05 10:08:07 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,9 +38,6 @@ MLX_REPO    := https://github.com/42Paris/minilibx-linux.git
 MLX_FLAGS   := -I$(MLX_DIR) -L$(MLX_DIR) -lmlx -lXext -lX11
 MLX_LIB     := $(MLX_DIR)/libmlx.a
 
-# SDL2 settings
-# SDL_LIB     := $(SDL_DIR)/build/.libs/libSDL2.a
-# SDL_FLAGS   := -I$(SDL_DIR)/include -L$(SDL_DIR)/build/.libs -lSDL2 -lm
 
 # Default rule to build the program
 all: CFLAGS += -DLIB=0 -I$(MLX_DIR)
@@ -60,25 +57,6 @@ $(MLX_LIB):
 	@echo "Building MiniLibX..."
 	@make -C $(MLX_DIR)
 
-# Ensure SDL2 is downloaded (Assuming a prebuilt SDL2 package)
-# $(SDL_LIB):
-# 	@if [ ! -d "$(SDL_DIR)" ]; then \
-# 		echo "Downloading SDL2..."; \
-# 		mkdir -p $(SDL_DIR); \
-# 		curl -L https://www.libsdl.org/release/SDL2-2.26.5.tar.gz | tar xz -C $(SDL_DIR) --strip-components=1; \
-# 	fi
-# 	@if [ ! -d "$(SDL_DIR)/build" ]; then \
-# 		echo "Building SDL2..."; \
-# 		cd $(SDL_DIR) && ./configure --disable-shared --enable-static && make; \
-# 	fi
-
-# Rule to build with SDL2
-# GAME_NAME   := and_thanks_for_all_the_fish
-# game: CFLAGS += -DLIB=1 -I$(SDL_DIR)/$(INCLUDE_DIR)
-
-# game: $(SDL_LIB) $(OBJS)
-# 	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) $^ $(SDL_FLAGS) -o $(GAME_NAME)
-
 # Rule to compile each source file into an object file
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
@@ -92,7 +70,6 @@ miniclean:
 clean:
 	$(RM) $(OBJ_DIR)
 	make -C $(MLX_DIR) clean || true
-#	make -C $(SDL_DIR) clean || true
 
 # Clean up both object files and the executable
 fclean: clean
@@ -105,4 +82,4 @@ re: fclean all
 -include $(DEPS)
 
 # Mark these targets as not actual files
-.PHONY: all miniclean clean fclean re game
+.PHONY: all miniclean clean fclean re
