@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:03:00 by okraus            #+#    #+#             */
-/*   Updated: 2025/04/04 19:05:43 by okraus           ###   ########.fr       */
+/*   Updated: 2025/05/28 14:30:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void draw_player(t_game* g, uint8_t p)
 	// printf("OLD FRONT_PIXEL %i %i\n", g->player[p].old_front_pixel_x, g->player[p].old_front_pixel_y);
 	// printf("SENSORY FRONT_PIXEL %i %i\n", sensory_pixel_x, sensory_pixel_y);
 	if (sensory_pixel_x < 0 || sensory_pixel_x >= WIN_WIDTH ||
-		sensory_pixel_y < 0 | sensory_pixel_y >= WIN_HEIGHT)
+		sensory_pixel_y < 0 || sensory_pixel_y >= WIN_HEIGHT)
 	{
 		g->player[p].alive = false;
 		g->player[p].deaths += 1;
