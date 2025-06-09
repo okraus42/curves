@@ -1,3 +1,3 @@
 # curves
 Simple game
-- up to 6 players
+- up to 6 players.
