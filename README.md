@@ -1,6 +1,7 @@
 # curves
-Simple game
-- up to 6 players.
-- fun competition.
-- easy controls.
-- and more...
+Simple game in C using minilibx
+- up to 6 players
+- fun competition
+- easy controls
+- competitive
+- and more
